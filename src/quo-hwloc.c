@@ -364,25 +364,32 @@ topo_load(quo_hwloc_t *hwloc)
     int rc = 0;
 
     if (!hwloc) return QUO_ERR_INVLD_ARG;
-    /* set flags that influence hwloc's behavior */
-    unsigned int flags = HWLOC_TOPOLOGY_FLAG_IS_THISSYSTEM;
-    /* don't detect PCI devices. */
-    flags &= ~HWLOC_TOPOLOGY_FLAG_IO_DEVICES;
-    /* don't detect PCI bridges. */
-    flags &= ~HWLOC_TOPOLOGY_FLAG_IO_BRIDGES;
-    /* don't detect the whole PCI hierarchy. */
-    flags &= ~HWLOC_TOPOLOGY_FLAG_WHOLE_IO;
-    /* don't detect instruction caches. */
-    flags &= ~HWLOC_TOPOLOGY_FLAG_ICACHES;
 
-    if (0 != (rc = quo_internal_hwloc_topology_set_flags(hwloc->topo, flags))) {
-        QUO_ERR_MSGRC("hwloc_topology_set_flags", qrc);
+    /* Set flags that influence hwloc's behavior. */
+    rc = quo_internal_hwloc_topology_set_all_types_filter(
+        hwloc->topo,
+        HWLOC_TYPE_FILTER_KEEP_ALL
+    );
+    if (0 != rc) {
         qrc = QUO_ERR_TOPO;
+        QUO_ERR_MSGRC("hwloc_topology_set_all_types_filter", qrc);
         goto out;
     }
-    if (0 != (rc = quo_internal_hwloc_topology_load(hwloc->topo))) {
-        QUO_ERR_MSGRC("hwloc_topology_load", qrc);
+
+    rc = quo_internal_hwloc_topology_set_io_types_filter(
+        hwloc->topo,
+        // TODO(skg) Check if QUO symbol prefix now works with this.
+        HWLOC_TYPE_FILTER_KEEP_IMPORTANT
+    );
+    if (0 != rc) {
         qrc = QUO_ERR_TOPO;
+        QUO_ERR_MSGRC("hwloc_topology_set_io_types_filter", qrc);
+        goto out;
+    }
+
+    if (0 != (rc = quo_internal_hwloc_topology_load(hwloc->topo))) {
+        qrc = QUO_ERR_TOPO;
+        QUO_ERR_MSGRC("hwloc_topology_load", qrc);
         goto out;
     }
 out:
@@ -431,9 +438,12 @@ quo_hwloc_init(quo_hwloc_t *hwloc,
         /* Export the topology to a shared-memory segment. */
         char *topo_xml = NULL;
         int topo_xml_len = 0;
-        rc = quo_internal_hwloc_topology_export_xmlbuffer(hwloc->topo,
-                                                          &topo_xml,
-                                                          &topo_xml_len);
+        rc = quo_internal_hwloc_topology_export_xmlbuffer(
+            hwloc->topo,
+            &topo_xml,
+            &topo_xml_len,
+            0 /* We need 2.x compatible XML export. */
+        );
         if (-1 == rc) {
             QUO_ERR_MSGRC("hwloc_topology_export_xmlbuffer", rc);
             qrc = QUO_ERR_TOPO;
@@ -493,9 +503,11 @@ quo_hwloc_init(quo_hwloc_t *hwloc,
         }
         /* Get the hardware topology XML string. */
         char *topo_xml = (char *)quo_sm_get_basep(hwloc->htopo_sm);
-        rc = quo_internal_hwloc_topology_set_xmlbuffer(hwloc->topo,
-                                                       topo_xml,
-                                                       topo_xml_len);
+        rc = quo_internal_hwloc_topology_set_xmlbuffer(
+            hwloc->topo,
+            topo_xml,
+            topo_xml_len
+        );
         if (-1 == rc) {
             QUO_ERR_MSGRC("hwloc_topology_set_xmlbuffer", rc);
             qrc = QUO_ERR_TOPO;

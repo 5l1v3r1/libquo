@@ -390,7 +390,6 @@ topo_load(quo_hwloc_t *hwloc)
 
     rc = quo_internal_hwloc_topology_set_io_types_filter(
         hwloc->topo,
-        // TODO(skg) Check if QUO symbol prefix now works with this.
         QUO_INTERNAL_hwloc_TYPE_FILTER_KEEP_IMPORTANT
     );
     if (0 != rc) {

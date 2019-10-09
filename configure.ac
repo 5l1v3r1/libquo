@@ -154,10 +154,23 @@ AM_CONDITIONAL([QUO_HAVE_OPENMP_SUPPORT],
 ################################################################################
 # hwloc stuff
 ################################################################################
-# set some hwloc configure options
-enable_embedded_mode=yes
+# Set some hwloc configure options
+hwloc_mode=embedded
+
+# Use hwloc's internal XML support.
 enable_libxml2=no
 enable_xml=yes
+
+# Disable hwloc's plugin system.
+enable_plugins=no
+enable_static=yes
+enable_shared=no
+
+# Disable more things we don't need.
+enable_cairo=no
+enable_gl=no
+enable_opencl=no
+
 # TODO - allow for this someday (busted on the Crays -- no static libs)
 enable_pci=no
 enable_libpci=no
@@ -165,13 +178,16 @@ enable_libudev=no
 #enable_libnuma=no
 
 HWLOC_SET_SYMBOL_PREFIX(quo_internal_)
+
 HWLOC_SETUP_CORE([src/hwloc],
                  [],
                  [AC_MSG_ERROR([*** hwloc configure failure. ***])],
                  [1])
+
+HWLOC_DO_AM_CONDITIONALS
+
 CPPFLAGS="$HWLOC_EMBEDDED_CPPFLAGS $CPPFLAGS"
 LIBS="$HWLOC_EMBEDDED_LIBS $LIBS"
-HWLOC_DO_AM_CONDITIONALS
 
 ################################################################################
 # For docs target support

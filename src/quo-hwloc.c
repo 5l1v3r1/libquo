@@ -93,24 +93,25 @@ ext2intobj(QUO_obj_type_t external,
      * and in quo.h. */
     switch (external) {
         case QUO_OBJ_MACHINE:
-            *internal = HWLOC_OBJ_MACHINE;
+            *internal = QUO_INTERNAL_hwloc_OBJ_MACHINE;
             break;
         case QUO_OBJ_NUMANODE:
-            *internal = HWLOC_OBJ_NUMANODE;
+            *internal = QUO_INTERNAL_hwloc_OBJ_NUMANODE;
             break;
+        /* TODO(skg) Add QUO_OBJ_SOCKET here and for Fortran. */
         case QUO_OBJ_SOCKET:
-            *internal = HWLOC_OBJ_SOCKET;
+            *internal = QUO_INTERNAL_hwloc_OBJ_PACKAGE;
             break;
         case QUO_OBJ_CORE:
-            *internal = HWLOC_OBJ_CORE;
+            *internal = QUO_INTERNAL_hwloc_OBJ_CORE;
             break;
         case QUO_OBJ_PU:
-            *internal = HWLOC_OBJ_PU;
+            *internal = QUO_INTERNAL_hwloc_OBJ_PU;
             break;
         default:
             /* well, we'll just return the machine if something weird was passed
              * to us. check your return codes, folks! */
-            *internal = HWLOC_OBJ_MACHINE;
+            *internal = QUO_INTERNAL_hwloc_OBJ_MACHINE;
             return QUO_ERR_INVLD_ARG;
     }
     return QUO_SUCCESS;
@@ -135,10 +136,12 @@ get_cur_bind(const quo_hwloc_t *hwloc,
         rc = QUO_ERR_OOR;
         goto out;
     }
-    if (quo_internal_hwloc_get_proc_cpubind(hwloc->topo,
-                                            who_pid,
-                                            cur_bind,
-                                            HWLOC_CPUBIND_PROCESS)) {
+    if (quo_internal_hwloc_get_proc_cpubind(
+            hwloc->topo,
+            who_pid,
+            cur_bind,
+            QUO_INTERNAL_hwloc_CPUBIND_PROCESS
+       )) {
         int err = errno;
         fprintf(stderr, QUO_ERR_PREFIX"%s failure in %s: %d (%s)\n",
                 "hwloc_get_proc_cpubind", __func__, err, strerror(err));
@@ -164,7 +167,7 @@ get_obj_by_type(const quo_hwloc_t *hwloc,
                 quo_internal_hwloc_obj_t *out_obj)
 {
     int rc = QUO_ERR;
-    quo_internal_hwloc_obj_type_t real_type = HWLOC_OBJ_MACHINE;
+    quo_internal_hwloc_obj_type_t real_type = QUO_INTERNAL_hwloc_OBJ_MACHINE;
 
     if (!hwloc || !out_obj) return QUO_ERR_INVLD_ARG;
     *out_obj = NULL;
@@ -188,7 +191,7 @@ get_obj_covering_cur_bind(const quo_hwloc_t *hwloc,
 {
     int rc = QUO_ERR;
     quo_internal_hwloc_cpuset_t curbind = NULL;
-    quo_internal_hwloc_obj_type_t real_type = HWLOC_OBJ_MACHINE;
+    quo_internal_hwloc_obj_type_t real_type = QUO_INTERNAL_hwloc_OBJ_MACHINE;
 
     if (!hwloc || !out_obj) return QUO_ERR_INVLD_ARG;
     if (QUO_SUCCESS != (rc = ext2intobj(type, &real_type))) return rc;
@@ -366,7 +369,7 @@ topo_load(quo_hwloc_t *hwloc)
     if (!hwloc) return QUO_ERR_INVLD_ARG;
 
     /* Set flags that influence hwloc's behavior. */
-    static const unsigned int flags = HWLOC_TOPOLOGY_FLAG_IS_THISSYSTEM;
+    const unsigned int flags = QUO_INTERNAL_hwloc_TOPOLOGY_FLAG_IS_THISSYSTEM;
 
     rc = quo_internal_hwloc_topology_set_flags(hwloc->topo, flags);
     if (0 != rc) {
@@ -377,7 +380,7 @@ topo_load(quo_hwloc_t *hwloc)
 
     rc = quo_internal_hwloc_topology_set_all_types_filter(
         hwloc->topo,
-        HWLOC_TYPE_FILTER_KEEP_ALL
+        QUO_INTERNAL_hwloc_TYPE_FILTER_KEEP_ALL
     );
     if (0 != rc) {
         qrc = QUO_ERR_TOPO;
@@ -388,7 +391,7 @@ topo_load(quo_hwloc_t *hwloc)
     rc = quo_internal_hwloc_topology_set_io_types_filter(
         hwloc->topo,
         // TODO(skg) Check if QUO symbol prefix now works with this.
-        HWLOC_TYPE_FILTER_KEEP_IMPORTANT
+        QUO_INTERNAL_hwloc_TYPE_FILTER_KEEP_IMPORTANT
     );
     if (0 != rc) {
         qrc = QUO_ERR_TOPO;
@@ -567,7 +570,7 @@ quo_hwloc_get_nobjs_in_type_by_type(const quo_hwloc_t *hwloc,
     int rc = QUO_ERR;
     quo_internal_hwloc_obj_t obj = NULL;
     quo_internal_hwloc_cpuset_t cpu_set = NULL;
-    quo_internal_hwloc_obj_type_t real_type = HWLOC_OBJ_MACHINE;
+    quo_internal_hwloc_obj_type_t real_type = QUO_INTERNAL_hwloc_OBJ_MACHINE;
     int nobjs = 0;
 
     if (!hwloc || !out_result) return QUO_ERR_INVLD_ARG;
@@ -616,12 +619,12 @@ quo_hwloc_get_nobjs_by_type(const quo_hwloc_t *hwloc,
                             int *out_nobjs)
 {
     int depth = 0, rc = QUO_ERR;
-    quo_internal_hwloc_obj_type_t real_type = HWLOC_OBJ_MACHINE;
+    quo_internal_hwloc_obj_type_t real_type = QUO_INTERNAL_hwloc_OBJ_MACHINE;
 
     if (!hwloc || !out_nobjs) return QUO_ERR_INVLD_ARG;
     if (QUO_SUCCESS != (rc = ext2intobj(target_type, &real_type))) return rc;
     depth = quo_internal_hwloc_get_type_depth(hwloc->topo, real_type);
-    if (HWLOC_TYPE_DEPTH_UNKNOWN == depth) {
+    if (QUO_INTERNAL_hwloc_TYPE_DEPTH_UNKNOWN == depth) {
         /* hwloc can't determine the number of x, so just return 0 */
         *out_nobjs = 0;
     }
@@ -735,7 +738,7 @@ rebind(const quo_hwloc_t *hwloc,
     /* set the policy */
     if (-1 == quo_internal_hwloc_set_cpubind(hwloc->topo,
                                              cpuset,
-                                             HWLOC_CPUBIND_PROCESS)) {
+                                             QUO_INTERNAL_hwloc_CPUBIND_PROCESS)) {
         rc = QUO_ERR_NOT_SUPPORTED;
         goto out;
     }
@@ -779,7 +782,7 @@ quo_hwloc_bind_pop(quo_hwloc_t *hwloc)
     /* revert to the top binding after pop (the previous binding) */
     if (QUO_SUCCESS != (rc = bind_stack_top(hwloc, &topbind))) goto out;
     if (-1 == quo_internal_hwloc_set_cpubind(hwloc->topo, topbind,
-                                             HWLOC_CPUBIND_PROCESS)) {
+                                             QUO_INTERNAL_hwloc_CPUBIND_PROCESS)) {
         rc = QUO_ERR_NOT_SUPPORTED;
         goto out;
     }

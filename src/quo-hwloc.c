@@ -98,7 +98,7 @@ ext2intobj(QUO_obj_type_t external,
         case QUO_OBJ_NUMANODE:
             *internal = QUO_INTERNAL_hwloc_OBJ_NUMANODE;
             break;
-        /* TODO(skg) Add QUO_OBJ_SOCKET here and for Fortran. */
+        case QUO_OBJ_PACKAGE:
         case QUO_OBJ_SOCKET:
             *internal = QUO_INTERNAL_hwloc_OBJ_PACKAGE;
             break;

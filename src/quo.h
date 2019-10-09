@@ -71,7 +71,9 @@ typedef enum {
     QUO_OBJ_MACHINE = 0,
     /** NUMA node. */
     QUO_OBJ_NUMANODE,
-    /** Socket. */
+    /** Package. */
+    QUO_OBJ_PACKAGE,
+    /** Socket (synonym for QUO_OBJ_PACKAGE). */
     QUO_OBJ_SOCKET,
     /** Core. */
     QUO_OBJ_CORE,

@@ -366,6 +366,15 @@ topo_load(quo_hwloc_t *hwloc)
     if (!hwloc) return QUO_ERR_INVLD_ARG;
 
     /* Set flags that influence hwloc's behavior. */
+    static const unsigned int flags = HWLOC_TOPOLOGY_FLAG_IS_THISSYSTEM;
+
+    rc = quo_internal_hwloc_topology_set_flags(hwloc->topo, flags);
+    if (0 != rc) {
+        qrc = QUO_ERR_TOPO;
+        QUO_ERR_MSGRC("hwloc_topology_set_flags", qrc);
+        goto out;
+    }
+
     rc = quo_internal_hwloc_topology_set_all_types_filter(
         hwloc->topo,
         HWLOC_TYPE_FILTER_KEEP_ALL

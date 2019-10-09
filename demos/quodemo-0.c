@@ -127,7 +127,7 @@ sys_grok(context_t *c)
     if (QUO_SUCCESS != QUO_nobjs_in_type_by_type(c->quo,
                                                  QUO_OBJ_MACHINE,
                                                  0,
-                                                 QUO_OBJ_SOCKET,
+                                                 QUO_OBJ_PACKAGE,
                                                  &c->nsockets)) {
         bad_func = "QUO_nobjs_in_type_by_type";
         goto out;
@@ -222,7 +222,7 @@ bindup_sockets(const context_t *c)
     /* if you are going to change bindings often, then cache this */
     if (c->noderank + 1 <= c->nsockets) {
         if (QUO_SUCCESS != QUO_bind_push(c->quo, QUO_BIND_PUSH_PROVIDED,
-                                         QUO_OBJ_SOCKET, c->noderank)) {
+                                         QUO_OBJ_PACKAGE, c->noderank)) {
             return 1;
         }
     }

@@ -162,6 +162,10 @@ enable_libxml2=no
 
 # Disable hwloc's plugin system.
 enable_plugins=no
+
+# These are for hwloc2 only, so save now to restore later.
+save_enable_static=$enable_static
+save_enable_shared=$enable_shared
 enable_static=yes
 enable_shared=no
 
@@ -185,6 +189,9 @@ HWLOC_DO_AM_CONDITIONALS
 
 CPPFLAGS="$HWLOC_EMBEDDED_CPPFLAGS $CPPFLAGS"
 LIBS="$HWLOC_EMBEDDED_LIBS $LIBS"
+
+enable_static=$save_enable_static
+enable_shared=$save_enable_shared
 
 ################################################################################
 # For docs target support

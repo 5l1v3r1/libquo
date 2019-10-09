@@ -159,7 +159,6 @@ hwloc_mode=embedded
 
 # Use hwloc's internal XML support.
 enable_libxml2=no
-enable_xml=yes
 
 # Disable hwloc's plugin system.
 enable_plugins=no
@@ -170,12 +169,10 @@ enable_shared=no
 enable_cairo=no
 enable_gl=no
 enable_opencl=no
-
-# TODO - allow for this someday (busted on the Crays -- no static libs)
+enable_cuda=no
+enable_nvml=no
 enable_pci=no
-enable_libpci=no
 enable_libudev=no
-#enable_libnuma=no
 
 HWLOC_SET_SYMBOL_PREFIX(quo_internal_)
 

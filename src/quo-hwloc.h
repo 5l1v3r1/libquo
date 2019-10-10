@@ -91,6 +91,7 @@ quo_hwloc_bind_threads(quo_hwloc_t *hwloc,
                int omp_thread,
                int num_omp_threads);
 
+// TODO(skg) Remove unsupported calls from API.
 int
 quo_hwloc_bind_nested_threads(quo_hwloc_t *hwloc,
                   int omp_thread,

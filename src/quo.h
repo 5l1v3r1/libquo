@@ -10,8 +10,9 @@
  * @file quo.h
  */
 
-/* I do a pretty terrible job explaining the interface. play around with the
- * demo codes; they are simple and pretty clearly illustrate how to use QUO. */
+/* I do a pretty terrible job explaining the interface. Play around with the
+ * demo codes, as they are simple and pretty clearly illustrate how to use QUO.
+ */
 
 #ifndef QUO_H_INCLUDED
 #define QUO_H_INCLUDED

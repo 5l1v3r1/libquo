@@ -590,15 +590,6 @@ QUO_get_mpi_comm_by_type(QUO_context q,
                          QUO_obj_type_t target_type,
                          MPI_Comm *out_comm);
 
-/**
- * \note
- * Experimental.
- */
-int
-QUO_bind_threads(QUO_context q,
-                 QUO_obj_type_t type,
-                 int index);
-
 #ifdef __cplusplus
 }
 #endif

@@ -41,7 +41,7 @@ quo_time_CFLAGS  = -I$(top_srcdir)/src
 quo_time_LDADD   = $(top_builddir)/src/libquo.la
 
 ################################################################################
-# xpm tests
+# XPM Tests
 ################################################################################
 if QUO_WITH_XPM
 noinst_PROGRAMS += \
@@ -56,3 +56,20 @@ xpm_0_LDADD   = \
 $(top_builddir)/src/xpm/libquo-xpm.la \
 $(top_builddir)/src/libquo.la
 endif
+
+################################################################################
+# Minimal Automated Testing TODO(skg): Improve.
+################################################################################
+check_PROGRAMS = \
+trivial
+
+TESTS = $(check_PROGRAMS)
+
+# Note that this MUST be terminated by a semicolon.
+AM_TESTS_ENVIRONMENT = \
+. $(top_srcdir)/tests/scripts/tests-env.sh;
+
+# With this, the test scripts will be able to print diagnostic messages to the
+# original standard error stream, even if the test driver redirects the stderr
+# of the test scripts to a log file before executing them.
+AM_TESTS_FD_REDIRECT = 9>&2

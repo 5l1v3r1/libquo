@@ -9,7 +9,15 @@
 ACLOCAL_AMFLAGS = -Iconfig -Isrc/hwloc/config
 
 EXTRA_DIST = \
-AUTHORS README.md THANKS LICENSE COPYRIGHT autogen contrib BROKEN-COMPILERS
+AUTHORS \
+README.md \
+THANKS \
+LICENSE \
+COPYRIGHT \
+autogen \
+contrib \
+BROKEN-COMPILERS \
+tests/scripts
 
 SUBDIRS = \
 src \

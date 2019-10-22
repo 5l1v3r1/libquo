@@ -16,8 +16,7 @@ LICENSE \
 COPYRIGHT \
 autogen \
 contrib \
-BROKEN-COMPILERS \
-tests/scripts
+BROKEN-COMPILERS
 
 SUBDIRS = \
 src \
@@ -25,6 +24,7 @@ src/fortran \
 src/tools \
 src/xpm \
 tests \
+tests/scripts \
 demos \
 pkgconfig \
 docs

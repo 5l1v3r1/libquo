@@ -63,7 +63,8 @@ endif
 check_PROGRAMS = \
 trivial
 
-TESTS = $(check_PROGRAMS)
+TESTS = \
+scripts/run-trivial-tests.sh
 
 # Note that this MUST be terminated by a semicolon.
 AM_TESTS_ENVIRONMENT = \

@@ -11,8 +11,6 @@
 # Exit when any command fails.
 set -e
 
-source scripts/run-tests-common.sh
-
 main() {
     echo "Running C Tests..."
 
@@ -21,7 +19,7 @@ main() {
         './quo-time':'1 2'
     )
 
-    run "${tests[@]}"
+    quo_tests_run "${tests[@]}"
 
     exit 0
 }

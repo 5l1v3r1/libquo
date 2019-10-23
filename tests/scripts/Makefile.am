@@ -8,6 +8,5 @@
 
 dist_check_SCRIPTS = \
 tests-env.sh \
-run-tests-common.sh \
 run-c-tests.sh \
 run-fortran-tests.sh

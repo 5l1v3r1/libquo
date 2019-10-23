@@ -8,6 +8,34 @@
 # top-level directory of this distribution.
 #
 
+quo_tests_get_app() {
+    t=$*
+
+    echo $t | cut -f 1 -d ':'
+}
+export -f quo_tests_get_app
+
+quo_tests_get_numpe() {
+    t=$*
+
+    echo $t | cut -f 2 -d ':'
+}
+export -f quo_tests_get_numpe
+
+quo_tests_run() {
+    tests=("$@")
+
+    for test in "${tests[@]}"; do
+        app=$(quo_tests_get_app $test)
+        for numpe in $(quo_tests_get_numpe $test); do
+            echo $QUO_TESTS_PRUN $QUO_TESTS_PRUN_N $numpe $QUO_TESTS_PRUN_OTHER_ARGS $app
+                 $QUO_TESTS_PRUN $QUO_TESTS_PRUN_N $numpe $QUO_TESTS_PRUN_OTHER_ARGS $app
+        done
+    done
+}
+export -f quo_tests_run
+
+
 emitl() {
 cat << EOF
 ============================================================================
@@ -19,6 +47,7 @@ emit_envars() {
 
     echo "# The following variables affect how tests are run."
     echo "# Exported key=value pairs will change test harness behavior."
+    echo "# Here are the defaults."
 
     for key in "${!envars[@]}"; do
        echo "$key=${envars[$key]}"
@@ -59,11 +88,12 @@ export_envars() {
             echo "# User-defined key-value pair detected: $key=$exval"
             val=${exval}
         fi
-        export $key=$val
+        echo export $key="$val"
+        export $key="$val"
     done
 
     echo "# Below is the setup used for testing."
-    env | grep QUO_TESTS_ | sort
+    env | egrep ^QUO_TESTS_.*= | sort
 
     exval=$(exported_val "QUO_TESTS_EXPORT")
     if [[ "x" != "x${exval}" ]]; then

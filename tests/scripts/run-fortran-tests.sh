@@ -11,8 +11,6 @@
 # Exit when any command fails.
 set -e
 
-source scripts/run-tests-common.sh
-
 main() {
     echo "Running Fortran Tests..."
 
@@ -20,7 +18,7 @@ main() {
         './quofort':'1 2'
     )
 
-    run "${tests[@]}"
+    quo_tests_run "${tests[@]}"
 
     exit 0
 }

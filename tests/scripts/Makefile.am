@@ -8,4 +8,4 @@
 
 dist_check_SCRIPTS = \
 tests-env.sh \
-run-trivial-tests.sh
+run-c-tests.sh

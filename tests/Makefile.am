@@ -64,7 +64,7 @@ check_PROGRAMS = \
 trivial
 
 TESTS = \
-scripts/run-trivial-tests.sh
+scripts/run-c-tests.sh
 
 # Note that this MUST be terminated by a semicolon.
 AM_TESTS_ENVIRONMENT = \

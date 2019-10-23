@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # Copyright (c)      2019 Triad National Security, LLC
 #                         All rights reserved.
@@ -6,8 +8,21 @@
 # top-level directory of this distribution.
 #
 
-dist_check_SCRIPTS = \
-tests-env.sh \
-run-tests-common.sh \
-run-c-tests.sh \
-run-fortran-tests.sh
+# Exit when any command fails.
+set -e
+
+source scripts/run-tests-common.sh
+
+main() {
+    echo "Running Fortran Tests..."
+
+    tests=(\
+        './quofort':'1 2'
+    )
+
+    run "${tests[@]}"
+
+    exit 0
+}
+
+main

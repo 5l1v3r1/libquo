@@ -13,6 +13,12 @@ dist-work \
 barrier-subset \
 quo-time
 
+if QUO_WITH_MPIFC
+noinst_PROGRAMS += \
+quofort
+endif
+
+
 ### test 0
 rebind_SOURCES = rebind.c
 rebind_CPPFLAGS  =
@@ -41,6 +47,18 @@ quo_time_CFLAGS  = -I$(top_srcdir)/src
 quo_time_LDADD   = $(top_builddir)/src/libquo.la
 
 ################################################################################
+# Fortran Tests
+################################################################################
+### Minimal Fortran test.
+if QUO_WITH_MPIFC
+quofort_SOURCES = quofort.f90
+quofort_FCFLAGS  = -I$(top_builddir)/src/fortran
+quofort_LDADD = \
+$(top_builddir)/src/fortran/libquo-usequo.la \
+$(top_builddir)/src/libquo.la
+endif
+
+################################################################################
 # XPM Tests
 ################################################################################
 if QUO_WITH_XPM
@@ -63,8 +81,18 @@ endif
 check_PROGRAMS = \
 trivial
 
+if QUO_WITH_MPIFC
+check_PROGRAMS += \
+quofort
+endif
+
 TESTS = \
 scripts/run-c-tests.sh
+
+if QUO_WITH_MPIFC
+TESTS += \
+scripts/run-fortran-tests.sh
+endif
 
 # Note that this MUST be terminated by a semicolon.
 AM_TESTS_ENVIRONMENT = \

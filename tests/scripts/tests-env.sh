@@ -88,7 +88,6 @@ export_envars() {
             echo "# User-defined key-value pair detected: $key=$exval"
             val=${exval}
         fi
-        echo export $key="$val"
         export $key="$val"
     done
 
